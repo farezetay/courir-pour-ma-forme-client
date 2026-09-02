@@ -1,14 +1,20 @@
 <script setup>
 import TheSeason from '@/components/TheSeason.vue'
+import { useSessionStore } from '@/stores/session'
 import { useSeasonsStore } from '@/stores/seasons'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const seasonStore = useSeasonsStore()
+const sessionStore = useSessionStore()
 const route = useRoute()
 
-onMounted(() => {
-  seasonStore.getApiSeason(route.params.id)
+onMounted(async () => {
+  await seasonStore.getApiSeason(route.params.id)
+
+  if (!seasonStore.error) {
+    sessionStore.restoreCompletedSessions(route.params.id)
+  }
 })
 </script>
 <template>

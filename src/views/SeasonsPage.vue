@@ -19,7 +19,7 @@ onMounted(() => {
         <h2>Saisons : {{ season.label }}</h2>
         <span>Semaines : {{ season.weeksCount }}</span> |
         <span>Séances : {{ season.sessionsCount }}</span> |
-        <RouterLink :to="`/seasons/${season.id}`">Plus d'info</RouterLink>
+        <RouterLink class="button-link" :to="`/seasons/${season.id}`">Plus d'info</RouterLink>
       </li>
     </ul>
   </div>

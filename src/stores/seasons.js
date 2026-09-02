@@ -6,6 +6,7 @@ export const useSeasonsStore = defineStore('seasons', {
   state: () => ({
     seasons: [],
     selectedSeason: null,
+    selectedSession: null,
     loading: false,
     error: null,
   }),
@@ -24,7 +25,6 @@ export const useSeasonsStore = defineStore('seasons', {
     async getApiSeasons() {
       this.loading = true
       this.error = null
-      this.selectedSeason = null
 
       try {
         const response = await fetch(urlAPI)
@@ -43,6 +43,7 @@ export const useSeasonsStore = defineStore('seasons', {
     async getApiSeason(id) {
       this.loading = true
       this.error = null
+      this.selectedSeason = null
 
       try {
         const response = await fetch(`${urlAPI}/${id}`)
@@ -57,6 +58,26 @@ export const useSeasonsStore = defineStore('seasons', {
       } finally {
         this.loading = false
       }
+    },
+    selectSession(sessionId) {
+      this.selectedSession = null
+      this.error = null
+      const thisSessionId = Number(sessionId)
+
+      if (!this.selectedSeason) {
+        this.error = 'Aucune saison sélectionnée'
+        return
+      }
+      for (const week of this.selectedSeason.weeks) {
+        const thisSession = week.sessions.find((element) => {
+          return element.id === thisSessionId
+        })
+        if (thisSession) {
+          this.selectedSession = thisSession
+          return
+        }
+      }
+      this.error = 'Séance introuvable'
     },
   },
 })
