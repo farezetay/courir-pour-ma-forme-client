@@ -1,4 +1,5 @@
 import SeasonsPage from '@/views/SeasonsPage.vue'
+import TheSeasonPage from '@/views/TheSeasonPage.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -6,8 +7,13 @@ const router = createRouter({
   routes: [
     {
       name: 'seasons',
-      path: '/',
+      path: '/seasons',
       component: SeasonsPage,
+    },
+    {
+      name: 'season',
+      path: '/seasons/:id',
+      component: TheSeasonPage,
     },
   ],
 })

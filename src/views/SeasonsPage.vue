@@ -9,16 +9,17 @@ onMounted(() => {
 })
 </script>
 <template>
-  <h1>Seasons</h1>
+  <h1>Saisons</h1>
   <p v-if="seasonStore.loading === true">Chargement...</p>
   <p v-else-if="seasonStore.error">{{ seasonStore.error }}</p>
   <p v-else-if="seasonStore.seasons.length === 0">Aucune saison disponible</p>
   <div v-else>
     <ul>
       <li v-for="season in seasonStore.seasons" :key="season.id">
-        <span>Saisons : {{ season.label }}</span> |
+        <h2>Saisons : {{ season.label }}</h2>
         <span>Semaines : {{ season.weeksCount }}</span> |
-        <span>Séances : {{ season.sessionsCount }}</span>
+        <span>Séances : {{ season.sessionsCount }}</span> |
+        <RouterLink :to="`/seasons/${season.id}`">Plus d'info</RouterLink>
       </li>
     </ul>
   </div>

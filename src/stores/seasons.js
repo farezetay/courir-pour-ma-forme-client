@@ -5,6 +5,7 @@ const urlAPI = '/api/seasons'
 export const useSeasonsStore = defineStore('seasons', {
   state: () => ({
     seasons: [],
+    selectedSeason: null,
     loading: false,
     error: null,
   }),
@@ -23,6 +24,7 @@ export const useSeasonsStore = defineStore('seasons', {
     async getApiSeasons() {
       this.loading = true
       this.error = null
+      this.selectedSeason = null
 
       try {
         const response = await fetch(urlAPI)
@@ -32,6 +34,24 @@ export const useSeasonsStore = defineStore('seasons', {
 
         const data = await response.json()
         this.seasons = data
+      } catch (error) {
+        this.error = error.message
+      } finally {
+        this.loading = false
+      }
+    },
+    async getApiSeason(id) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await fetch(`${urlAPI}/${id}`)
+        if (!response.ok) {
+          throw new Error('Erreur HTTP ' + response.status)
+        }
+
+        const data = await response.json()
+        this.selectedSeason = data
       } catch (error) {
         this.error = error.message
       } finally {
