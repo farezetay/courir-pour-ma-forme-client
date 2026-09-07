@@ -51,6 +51,43 @@ const resetCurrentWeek = () => {
 
   sessionStore.resetWeek(currentWeek.value)
 }
+
+const totalDuration = computed(() => {
+  if (!thisSession.value) {
+    return 0
+  }
+
+  return thisSession.value.steps.reduce((total, step) => total + step.durationSeconds, 0)
+})
+
+const stepLabels = {
+  echauffement: 'Échauffement',
+  trottes: 'Trotte',
+  marches: 'Marche',
+  etirements: 'Étirements',
+  cours: 'Course',
+  sprints: 'Sprint',
+  deboules: 'Déboulés',
+}
+
+const getStepLabel = (type) => {
+  return stepLabels[type] || type
+}
+
+const formatDuration = (seconds) => {
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+
+  if (minutes === 0) {
+    return `${remainingSeconds} s`
+  }
+
+  if (remainingSeconds === 0) {
+    return `${minutes} min`
+  }
+
+  return `${minutes} min ${remainingSeconds} s`
+}
 </script>
 <template>
   <main class="session-page">
@@ -62,7 +99,7 @@ const resetCurrentWeek = () => {
     <section v-else>
       <h1>Séance numéro {{ thisSession.number }}</h1>
       <RouterLink
-      class="button-link"
+        class="button-link"
         :to="{
           name: 'season',
           params: { id: route.params.seasonId },
@@ -70,6 +107,35 @@ const resetCurrentWeek = () => {
       >
         Retour à la saison
       </RouterLink>
+      <section class="session-overview">
+        <p>
+          <strong>{{ thisSession.steps.length }} étapes</strong>
+          — Durée totale :
+          <strong>{{ formatDuration(totalDuration) }}</strong>
+        </p>
+
+        <div class="session-timeline" aria-label="Déroulement de la séance">
+          <span
+            v-for="step in thisSession.steps"
+            :key="step.position"
+            class="step-segment"
+            :class="`step-${step.type}`"
+            :style="{ flexGrow: step.durationSeconds }"
+            :title="`${getStepLabel(step.type)} : ${formatDuration(step.durationSeconds)}`"
+          ></span>
+        </div>
+
+        <details>
+          <summary>Voir le détail des étapes</summary>
+
+          <ol class="step-list">
+            <li v-for="step in thisSession.steps" :key="step.position">
+              {{ getStepLabel(step.type) }}
+              — {{ formatDuration(step.durationSeconds) }}
+            </li>
+          </ol>
+        </details>
+      </section>
       <div v-if="!sessionStore.isCompleted">
         <p>
           Étape {{ sessionStore.currentStepIndex + 1 }} /
@@ -96,4 +162,55 @@ const resetCurrentWeek = () => {
     </section>
   </main>
 </template>
-<style scoped></style>
+<style scoped>
+.session-overview {
+  margin: 20px 0;
+  padding: 16px;
+  background: white;
+  border-radius: 16px;
+}
+
+.session-timeline {
+  display: flex;
+  height: 24px;
+  margin: 16px 0;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.step-segment {
+  flex-basis: 0;
+  min-width: 4px;
+}
+
+.step-echauffement {
+  background: #f59e0b;
+}
+
+.step-trottes,
+.step-cours {
+  background: #22c55e;
+}
+
+.step-marches {
+  background: #3b82f6;
+}
+
+.step-etirements {
+  background: #8b5cf6;
+}
+
+.step-sprints,
+.step-deboules {
+  background: #ef4444;
+}
+
+details summary {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.step-list li {
+  margin-bottom: 8px;
+}
+</style>
