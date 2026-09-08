@@ -54,7 +54,7 @@ onMounted(async () => {
       return
     }
 
-    usesServerProgress = progress.activeSeason?.seasonId === route.params.seasonId
+    usesServerProgress = Number(progress.activeSeason?.seasonId) === Number(route.params.seasonId)
 
     // Un utilisateur connecté ne peut pas accéder aux séances
     // protégées d’une saison qui n’est pas active.
@@ -93,9 +93,12 @@ const syncProgress = async () => {
 
   // On n’enregistre dans MySQL que si cette saison
   // est bien la saison active du compte.
-  if (progressStore.activeSeason?.seasonId !== route.params.seasonId) {
-    return
-  }
+  if (
+  Number(progressStore.activeSeason?.seasonId)
+  !== Number(route.params.seasonId)
+) {
+  return
+}
 
   await progressStore.saveSessionProgress({
     sessionId: sessionStore.activeSession.id,
@@ -382,9 +385,12 @@ const formatDuration = (seconds) => {
   background: #f1b63f;
 }
 
-.step-trottes,
-.step-cours {
+.step-trottes {
   background: var(--green-500);
+}
+
+.step-cours {
+  background: #2f80ed;
 }
 
 .step-marches {

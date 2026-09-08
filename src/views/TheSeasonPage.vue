@@ -19,7 +19,7 @@ const sessionStore = useSessionStore()
 const showProgressChoices = ref(false)
 
 const isActiveSeason = computed(() => {
-  return progressStore.activeSeason?.seasonId === route.params.id
+  return Number(progressStore.activeSeason?.seasonId) === Number(route.params.id)
 })
 
 const hasAnotherActiveSeason = computed(() => {
@@ -45,9 +45,12 @@ onMounted(async () => {
   // Un utilisateur connecté récupère sa progression MySQL.
   const progress = await progressStore.getProgress()
 
-  if (progress && progress.activeSeason?.seasonId === route.params.id) {
-    sessionStore.completedSessionIds = [...progress.completedSessionIds]
-  }
+  if (
+  progress
+  && Number(progress.activeSeason?.seasonId) === Number(route.params.id)
+) {
+  sessionStore.completedSessionIds = [...progress.completedSessionIds]
+}
 })
 
 const openCurrentSession = () => {
