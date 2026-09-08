@@ -66,18 +66,11 @@ router.push(redirect)
         {{ authStore.error }}
       </p>
 
-      <button
-        type="submit"
-        :disabled="authStore.loading"
-      >
-        {{
-          authStore.loading
-            ? 'Connexion...'
-            : 'Se connecter'
-        }}
+      <button type="submit" :disabled="authStore.loading">
+        {{ authStore.loading ? 'Connexion...' : 'Se connecter' }}
       </button>
 
-      <RouterLink to="/register">
+      <RouterLink class="auth-switch" to="/register">
         Créer un compte
       </RouterLink>
     </form>
@@ -86,33 +79,50 @@ router.push(redirect)
 
 <style scoped>
 .auth-page {
-  width: min(100%, 420px);
+  width: min(100%, 440px);
   margin: 0 auto;
-  padding: 1.5rem;
 }
 
 .auth-form {
   display: grid;
-  gap: 0.75rem;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 26px 8px 26px 8px;
+  box-shadow: var(--shadow);
 }
 
 label {
-  font-weight: 600;
+  color: var(--navy-950);
+  font-weight: 700;
 }
 
 input {
-  min-height: 48px;
-  padding: 0.75rem;
-  border: 1px solid #999;
-  border-radius: 0.5rem;
-  font: inherit;
+  width: 100%;
+  min-height: 52px;
+  padding: 0.8rem 0.9rem;
+  color: var(--ink);
+  background: #fbfcfa;
+  border: 1px solid #bfcac2;
+  border-radius: 12px 4px 12px 4px;
 }
 
-button {
-  margin-top: 0.75rem;
+input:focus {
+  background: white;
+  border-color: var(--green-600);
 }
 
-.error {
-  color: #b00020;
+.auth-form button {
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.auth-switch {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
 }
 </style>

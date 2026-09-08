@@ -24,41 +24,41 @@ const logout = async () => {
 </script>
 
 <template>
-  <header>
-    <h1>Courir pour ma forme</h1>
+  <div class="app-shell">
+    <header class="app-header">
+      <RouterLink class="brand" to="/seasons" aria-label="Accueil des saisons">
+        <img class="brand__mark" src="/logo-192-192.png" alt="" />
+        <span class="brand__name">Courir pour ma forme</span>
+      </RouterLink>
 
-    <nav>
-      <RouterLink to="/seasons">Saisons</RouterLink>
+      <span v-if="authStore.isAuthenticated" class="account-chip">
+        Bonjour {{ authStore.user.username }}
+      </span>
+    </header>
+
+    <div class="app-main">
+      <p v-if="authStore.loading && !authStore.user" class="loading-state">
+        Chargement du compte...
+      </p>
+
+      <RouterView />
+    </div>
+
+    <nav class="app-nav" aria-label="Navigation principale">
+      <RouterLink class="app-nav__link" to="/seasons">Saisons</RouterLink>
 
       <template v-if="authStore.isAuthenticated">
-        <span>Bonjour {{ authStore.user.username }}</span>
-
-        <button type="button" @click="logout">
+        <button class="app-nav__button" type="button" @click="logout">
           Se déconnecter
         </button>
       </template>
 
       <template v-else>
-        <RouterLink to="/login">Connexion</RouterLink>
-        <RouterLink to="/register">Inscription</RouterLink>
+        <RouterLink class="app-nav__link" to="/login">Connexion</RouterLink>
+        <RouterLink class="app-nav__link" to="/register">Inscription</RouterLink>
       </template>
     </nav>
-  </header>
-
-  <main>
-    <p v-if="authStore.loading && !authStore.user">
-  Chargement du compte...
-</p>
-
-<RouterView />
-  </main>
+  </div>
 </template>
 
-<style scoped>
-nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-}
-</style>
+<style scoped></style>
