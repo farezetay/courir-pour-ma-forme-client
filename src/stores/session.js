@@ -65,7 +65,7 @@ export const useSessionStore = defineStore('session', {
           return
         }
         this.saveProgress()
-      }, 20)
+      }, 1000)
     },
 
     nextStep() {
