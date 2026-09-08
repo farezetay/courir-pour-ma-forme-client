@@ -1,3 +1,5 @@
+import LoginPage from '@/views/LoginPage.vue'
+import RegisterPage from '@/views/RegisterPage.vue'
 import SeasonsPage from '@/views/SeasonsPage.vue'
 import TheSeasonPage from '@/views/TheSeasonPage.vue'
 import TheSessionPage from '@/views/TheSessionPage.vue'
@@ -20,6 +22,16 @@ const router = createRouter({
       name: 'session',
       path: '/seasons/:seasonId/sessions/:sessionId',
       component: TheSessionPage,
+    },
+    {
+      name: 'login',
+      path: '/login',
+      component: LoginPage,
+    },
+    {
+      name: 'register',
+      path: '/register',
+      component: RegisterPage,
     },
   ],
 })

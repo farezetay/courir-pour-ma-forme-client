@@ -1,24 +1,53 @@
 <script setup>
+import { useAuthStore } from '@/stores/auth'
+import { useRouter, useRoute } from 'vue-router'
 import { useSeasonsStore } from '@/stores/seasons'
 import { useSessionStore } from '@/stores/session'
 import { storeToRefs } from 'pinia'
 import { onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
 
 const seasonStore = useSeasonsStore()
 const sessionStore = useSessionStore()
+const authStore = useAuthStore()
+const router = useRouter()
 const { selectedSession: thisSession } = storeToRefs(seasonStore)
 const route = useRoute()
 
 onMounted(async () => {
   await seasonStore.getApiSeason(route.params.seasonId)
-  if (!seasonStore.error) {
-    seasonStore.selectSession(route.params.sessionId)
-    if (thisSession.value) {
-      sessionStore.prepareSession(thisSession.value, route.params.seasonId)
-      sessionStore.restoreProgress()
-    }
+  await authStore.getCurrentUser()
+
+  if (seasonStore.error) {
+    return
   }
+
+  seasonStore.selectSession(route.params.sessionId)
+
+  if (!thisSession.value) {
+    return
+  }
+
+  // La séance d’essai est toujours la première séance
+  // de la première semaine de la saison.
+  const trialSession = seasonStore.selectedSeason.weeks[0]?.sessions[0]
+
+  const isTrialSession = trialSession?.id === thisSession.value.id
+
+  // Une séance autre que la séance d’essai nécessite un compte.
+  if (!isTrialSession && !authStore.isAuthenticated) {
+    router.replace({
+      name: 'login',
+      query: {
+        redirect: route.fullPath,
+      },
+    })
+
+    return
+  }
+
+  sessionStore.prepareSession(thisSession.value, route.params.seasonId)
+
+  sessionStore.restoreProgress()
 })
 
 const reset = () => {
