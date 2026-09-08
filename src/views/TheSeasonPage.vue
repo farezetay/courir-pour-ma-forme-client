@@ -19,7 +19,7 @@ const sessionStore = useSessionStore()
 const showProgressChoices = ref(false)
 
 const isActiveSeason = computed(() => {
-  return Number(progressStore.activeSeason?.seasonId) === Number(route.params.id)
+  return String(progressStore.activeSeason?.seasonId) === String(route.params.id)
 })
 
 const hasAnotherActiveSeason = computed(() => {
