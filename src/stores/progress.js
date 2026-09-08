@@ -151,5 +151,34 @@ export const useProgressStore = defineStore('progress', {
         this.saving = false
       }
     },
+    async importGuestProgress(guestProgress) {
+      if (!guestProgress?.seasonId || !guestProgress?.sessionId) {
+        return false
+      }
+
+      // Crée ou réactive la saison du compte.
+      const startedSeason = await this.startSeason(guestProgress.seasonId)
+
+      if (!startedSeason) {
+        return false
+      }
+
+      // Copie la séance locale dans la progression MySQL.
+      const savedProgress = await this.saveSessionProgress({
+        sessionId: guestProgress.sessionId,
+        currentStepIndex: guestProgress.currentStepIndex ?? 0,
+        remainingSeconds: guestProgress.remainingSeconds ?? 0,
+        isCompleted: guestProgress.isCompleted === true,
+      })
+
+      if (!savedProgress) {
+        return false
+      }
+
+      // Recharge l’état MySQL après l’importation.
+      await this.getProgress()
+
+      return true
+    },
   },
 })

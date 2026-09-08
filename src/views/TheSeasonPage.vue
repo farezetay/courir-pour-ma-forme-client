@@ -29,6 +29,7 @@ const hasAnotherActiveSeason = computed(() => {
 onMounted(async () => {
   await seasonStore.getApiSeason(route.params.id)
   await authStore.getCurrentUser()
+  sessionStore.completedSessionIds = []
 
   if (seasonStore.error) {
     return

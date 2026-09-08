@@ -70,7 +70,7 @@ onMounted(async () => {
     }
   }
 
-  sessionStore.prepareSession(thisSession.value, route.params.seasonId)
+  sessionStore.prepareSession(thisSession.value, route.params.seasonId, !usesServerProgress)
 
   if (usesServerProgress) {
     const savedSession = progressStore.sessions.find((session) => {

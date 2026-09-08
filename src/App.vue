@@ -3,6 +3,11 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { RouterLink, RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useProgressStore } from '@/stores/progress'
+import { useSessionStore } from '@/stores/session'
+
+const progressStore = useProgressStore()
+const sessionStore = useSessionStore()
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -18,6 +23,8 @@ const logout = async () => {
 
   // On redirige seulement si la déconnexion a réussi.
   if (!authStore.isAuthenticated) {
+    sessionStore.clearSessionState()
+    progressStore.$reset()
     router.push('/login')
   }
 }

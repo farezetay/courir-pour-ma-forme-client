@@ -12,6 +12,7 @@ export const useSessionStore = defineStore('session', {
     isCompleted: false,
     activeSeasonId: null,
     completedSessionIds: [],
+    saveLocally: true,
   }),
   getters: {
     currentStep: (state) => {
@@ -93,17 +94,19 @@ export const useSessionStore = defineStore('session', {
       }
       this.saveProgress()
     },
-    prepareSession(session, seasonId) {
+    prepareSession(session, seasonId, saveLocally = true) {
       this.pauseTimer()
+
       this.activeSession = session
       this.currentStepIndex = 0
-      this.remainingSeconds = session.steps[this.currentStepIndex].durationSeconds
+      this.remainingSeconds = session.steps[0].durationSeconds
       this.isRunning = false
       this.isCompleted = false
       this.activeSeasonId = seasonId
+      this.saveLocally = saveLocally
     },
     saveProgress() {
-      if (!this.activeSession) {
+      if (!this.activeSession || !this.saveLocally) {
         return
       }
       const progress = {
@@ -201,6 +204,39 @@ export const useSessionStore = defineStore('session', {
       this.remainingSeconds = progress.remainingSeconds
       this.isCompleted = progress.isCompleted
       this.isRunning = false
+    },
+    getLocalProgress() {
+      const savedProgress = localStorage.getItem(STORAGE_KEY)
+
+      if (!savedProgress) {
+        return null
+      }
+
+      try {
+        return JSON.parse(savedProgress)
+      } catch (error) {
+        console.log('La progression locale est illisible :', error)
+        localStorage.removeItem(STORAGE_KEY)
+        return null
+      }
+    },
+
+    clearLocalProgress() {
+      localStorage.removeItem(STORAGE_KEY)
+    },
+
+    clearSessionState() {
+      clearInterval(timerId)
+      timerId = null
+
+      this.activeSession = null
+      this.currentStepIndex = 0
+      this.remainingSeconds = 0
+      this.isRunning = false
+      this.isCompleted = false
+      this.activeSeasonId = null
+      this.completedSessionIds = []
+      this.saveLocally = true
     },
   },
 })

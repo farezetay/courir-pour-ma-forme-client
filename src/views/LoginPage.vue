@@ -2,10 +2,14 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useProgressStore } from '@/stores/progress'
+import { useSessionStore } from '@/stores/session'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
+const progressStore = useProgressStore()
+const sessionStore = useSessionStore()
 const identifier = ref('')
 const password = ref('')
 
@@ -19,7 +23,15 @@ const submitLogin = async () => {
   if (!user) {
     return
   }
+  const guestProgress = sessionStore.getLocalProgress()
 
+  if (guestProgress) {
+    const imported = await progressStore.importGuestProgress(guestProgress)
+
+    if (imported) {
+      sessionStore.clearLocalProgress()
+    }
+  }
   // Une fois connecté, le coureur arrive
   // sur la liste des saisons.
   const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/seasons'
