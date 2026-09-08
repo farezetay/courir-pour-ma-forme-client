@@ -34,12 +34,20 @@ const submitRegister = async () => {
 
   const user = await authStore.register(userData)
 
-  // Si register() renvoie null, le store contient déjà le message d’erreur.
-  if (!user) {
-    return
-  }
+if (!user) {
+  return
+}
 
-  router.push('/login')
+const loggedInUser = await authStore.login(
+  username.value,
+  password.value,
+)
+
+if (!loggedInUser) {
+  return
+}
+
+await router.push('/seasons')
 }
 </script>
 
