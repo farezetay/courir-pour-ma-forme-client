@@ -16,11 +16,12 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'audio/*.mp3'],
 
       manifest: {
+        lang: 'fr',
         name: 'Courir pour ma forme',
         short_name: 'Courir',
         description: 'Programme progressif de course à pied',
-        theme_color: '#1f7a4c',
-        background_color: '#ffffff',
+        theme_color: '#012c4d',
+        background_color: '#f4f6f3',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
