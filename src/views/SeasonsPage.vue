@@ -30,8 +30,12 @@ onMounted(() => {
         <h2>{{ season.label }}</h2>
 
         <div class="season-card__stats">
-          <span><strong>{{ season.weeksCount }}</strong> semaines</span>
-          <span><strong>{{ season.sessionsCount }}</strong> séances</span>
+          <span
+            ><strong>{{ season.weeksCount }}</strong> semaines</span
+          >
+          <span
+            ><strong>{{ season.sessionsCount }}</strong> séances</span
+          >
         </div>
 
         <RouterLink class="button-link button-link--green" :to="`/seasons/${season.id}`">

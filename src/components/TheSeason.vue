@@ -80,54 +80,46 @@ const isLockedForVisitor = (session) => {
       <h3>Semaine {{ currentWeek.number }}</h3>
 
       <ul class="session-list">
-  <li
-    v-for="session in currentWeek.sessions"
-    :key="session.id"
-    class="session-item"
-  >
-    <div
-      class="session-content"
-      :class="{
-        blurred: isLockedForVisitor(session),
-      }"
-    >
-      <span>Séance {{ session.number }}</span>
+        <li v-for="session in currentWeek.sessions" :key="session.id" class="session-item">
+          <div
+            class="session-content"
+            :class="{
+              blurred: isLockedForVisitor(session),
+            }"
+          >
+            <span>Séance {{ session.number }}</span>
 
-      <span v-if="isCompleted(session)">
-        Terminée ✓
-      </span>
+            <span v-if="isCompleted(session)"> Terminée ✓ </span>
 
-      <span v-else-if="isTrialSession(session)">
-        Essai gratuit
-      </span>
+            <span v-else-if="isTrialSession(session)"> Essai gratuit </span>
 
-      <RouterLink
-        v-if="canOpenSession(session)"
-        class="button-link"
-        :to="getSessionPath(session)"
-      >
-        {{ isCompleted(session) ? 'Revoir' : 'Ouvrir' }}
-      </RouterLink>
+            <RouterLink
+              v-if="canOpenSession(session)"
+              class="button-link"
+              :to="getSessionPath(session)"
+            >
+              {{ isCompleted(session) ? 'Revoir' : 'Ouvrir' }}
+            </RouterLink>
 
-      <span v-else-if="authStore.isAuthenticated">
-        Démarrez cette saison pour accéder à la séance
-      </span>
-    </div>
+            <span v-else-if="authStore.isAuthenticated">
+              Démarrez cette saison pour accéder à la séance
+            </span>
+          </div>
 
-    <RouterLink
-      v-if="isLockedForVisitor(session)"
-      class="session-login-overlay"
-      :to="{
-        name: 'login',
-        query: {
-          redirect: getSessionPath(session),
-        },
-      }"
-    >
-      Connectez-vous pour accéder à cette séance
-    </RouterLink>
-  </li>
-</ul>
+          <RouterLink
+            v-if="isLockedForVisitor(session)"
+            class="session-login-overlay"
+            :to="{
+              name: 'login',
+              query: {
+                redirect: getSessionPath(session),
+              },
+            }"
+          >
+            Connectez-vous pour accéder à cette séance
+          </RouterLink>
+        </li>
+      </ul>
     </article>
 
     <p v-else>Toute la saison est terminée ! Bravo !</p>

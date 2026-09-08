@@ -4,12 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useSeasonsStore } from '@/stores/seasons'
 import { useSessionStore } from '@/stores/session'
 import { storeToRefs } from 'pinia'
-import {
-  computed,
-  onMounted,
-  ref,
-  watch,
-} from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useProgressStore } from '@/stores/progress'
 
 const progressStore = useProgressStore()
@@ -35,11 +30,9 @@ onMounted(async () => {
     return
   }
 
-  const trialSession =
-    seasonStore.selectedSeason.weeks[0]?.sessions[0]
+  const trialSession = seasonStore.selectedSeason.weeks[0]?.sessions[0]
 
-  const isTrialSession =
-    trialSession?.id === thisSession.value.id
+  const isTrialSession = trialSession?.id === thisSession.value.id
 
   if (!isTrialSession && !authStore.isAuthenticated) {
     router.replace({
@@ -61,9 +54,7 @@ onMounted(async () => {
       return
     }
 
-    usesServerProgress =
-      progress.activeSeason?.seasonId ===
-      route.params.seasonId
+    usesServerProgress = progress.activeSeason?.seasonId === route.params.seasonId
 
     // Un utilisateur connecté ne peut pas accéder aux séances
     // protégées d’une saison qui n’est pas active.
@@ -79,20 +70,14 @@ onMounted(async () => {
     }
   }
 
-  sessionStore.prepareSession(
-    thisSession.value,
-    route.params.seasonId,
-  )
+  sessionStore.prepareSession(thisSession.value, route.params.seasonId)
 
   if (usesServerProgress) {
     const savedSession = progressStore.sessions.find((session) => {
       return session.sessionId === thisSession.value.id
     })
 
-    sessionStore.restoreServerProgress(
-      savedSession,
-      progressStore.completedSessionIds,
-    )
+    sessionStore.restoreServerProgress(savedSession, progressStore.completedSessionIds)
   } else {
     sessionStore.completedSessionIds = []
     sessionStore.restoreProgress()
@@ -102,20 +87,13 @@ onMounted(async () => {
 })
 
 const syncProgress = async () => {
-  if (
-    !sessionReady.value ||
-    !authStore.isAuthenticated ||
-    !sessionStore.activeSession
-  ) {
+  if (!sessionReady.value || !authStore.isAuthenticated || !sessionStore.activeSession) {
     return
   }
 
   // On n’enregistre dans MySQL que si cette saison
   // est bien la saison active du compte.
-  if (
-    progressStore.activeSeason?.seasonId !==
-    route.params.seasonId
-  ) {
+  if (progressStore.activeSeason?.seasonId !== route.params.seasonId) {
     return
   }
 
@@ -139,35 +117,23 @@ const pauseSession = async () => {
 
 // Sauvegarde lorsqu’on change d’étape
 // ou lorsqu’une séance se termine.
-watch(
-  [
-    () => sessionStore.currentStepIndex,
-    () => sessionStore.isCompleted,
-  ],
-  () => {
-    void syncProgress()
-  },
-)
+watch([() => sessionStore.currentStepIndex, () => sessionStore.isCompleted], () => {
+  void syncProgress()
+})
 
 // Pendant la course, sauvegarde toutes les 10 secondes.
 // Cela évite d’envoyer une requête MySQL chaque seconde.
 watch(
   () => sessionStore.remainingSeconds,
   (remainingSeconds) => {
-    if (
-      sessionStore.isRunning &&
-      remainingSeconds > 0 &&
-      remainingSeconds % 10 === 0
-    ) {
+    if (sessionStore.isRunning && remainingSeconds > 0 && remainingSeconds % 10 === 0) {
       void syncProgress()
     }
   },
 )
 
 const reset = async () => {
-  const confirmed = window.confirm(
-    'Voulez-vous réinitialiser votre avancée dans la séance ?',
-  )
+  const confirmed = window.confirm('Voulez-vous réinitialiser votre avancée dans la séance ?')
 
   if (!confirmed) {
     return
@@ -240,13 +206,7 @@ const formatDuration = (seconds) => {
 </script>
 <template>
   <main class="session-page">
-    <p
-      v-if="
-        seasonStore.loading ||
-        authStore.loading ||
-        (progressStore.loading && !sessionReady)
-      "
-    >
+    <p v-if="seasonStore.loading || authStore.loading || (progressStore.loading && !sessionReady)">
       Chargement de la séance...
     </p>
 
@@ -254,23 +214,13 @@ const formatDuration = (seconds) => {
       {{ seasonStore.error }}
     </p>
 
-    <p
-      v-else-if="
-        progressStore.error &&
-        !sessionStore.activeSession
-      "
-      class="error"
-    >
+    <p v-else-if="progressStore.error && !sessionStore.activeSession" class="error">
       {{ progressStore.error }}
     </p>
 
-    <p v-else-if="!thisSession">
-      Séance indisponible
-    </p>
+    <p v-else-if="!thisSession">Séance indisponible</p>
 
-    <p v-else-if="!sessionStore.activeSession">
-      Préparation de la séance...
-    </p>
+    <p v-else-if="!sessionStore.activeSession">Préparation de la séance...</p>
 
     <section v-else class="session-content-page">
       <h1>Séance numéro {{ thisSession.number }}</h1>
@@ -289,9 +239,7 @@ const formatDuration = (seconds) => {
 
       <section class="session-overview">
         <p class="session-summary">
-          <strong>
-            {{ thisSession.steps.length }} étapes
-          </strong>
+          <strong> {{ thisSession.steps.length }} étapes </strong>
 
           — Durée totale :
 
@@ -300,10 +248,7 @@ const formatDuration = (seconds) => {
           </strong>
         </p>
 
-        <div
-          class="session-timeline"
-          aria-label="Déroulement de la séance"
-        >
+        <div class="session-timeline" aria-label="Déroulement de la séance">
           <span
             v-for="step in thisSession.steps"
             :key="step.position"
@@ -312,10 +257,8 @@ const formatDuration = (seconds) => {
             :style="{
               flexGrow: step.durationSeconds,
             }"
-            :title="
-              `${getStepLabel(step.type)} :
-              ${formatDuration(step.durationSeconds)}`
-            "
+            :title="`${getStepLabel(step.type)} :
+              ${formatDuration(step.durationSeconds)}`"
           ></span>
         </div>
 
@@ -323,10 +266,7 @@ const formatDuration = (seconds) => {
           <summary>Voir le détail des étapes</summary>
 
           <ol class="step-list">
-            <li
-              v-for="step in thisSession.steps"
-              :key="step.position"
-            >
+            <li v-for="step in thisSession.steps" :key="step.position">
               {{ getStepLabel(step.type) }}
               —
               {{ formatDuration(step.durationSeconds) }}
@@ -362,20 +302,9 @@ const formatDuration = (seconds) => {
             Démarrer ou reprendre
           </button>
 
-          <button
-            v-else
-            class="secondary-action"
-            type="button"
-            @click="pauseSession"
-          >
-            Pause
-          </button>
+          <button v-else class="secondary-action" type="button" @click="pauseSession">Pause</button>
 
-          <button
-            class="danger-action"
-            type="button"
-            @click="reset"
-          >
+          <button class="danger-action" type="button" @click="reset">
             Réinitialiser la séance
           </button>
         </div>
@@ -384,33 +313,18 @@ const formatDuration = (seconds) => {
       <section v-else class="completion-card">
         <p>Séance terminée ! Bravo !</p>
 
-        <button
-          type="button"
-          @click="reset"
-        >
-          Recommencer la séance
-        </button>
+        <button type="button" @click="reset">Recommencer la séance</button>
       </section>
 
       <p v-if="progressStore.saving" class="saving-status" role="status">
         Sauvegarde de la progression...
       </p>
 
-      <p
-        v-if="
-          progressStore.error &&
-          sessionStore.activeSession
-        "
-        class="error"
-      >
+      <p v-if="progressStore.error && sessionStore.activeSession" class="error">
         {{ progressStore.error }}
       </p>
 
-      <button
-        class="danger-action reset-week"
-        type="button"
-        @click="resetCurrentWeek"
-      >
+      <button class="danger-action reset-week" type="button" @click="resetCurrentWeek">
         Réinitialiser la semaine
       </button>
     </section>
@@ -434,8 +348,7 @@ const formatDuration = (seconds) => {
   padding: 1.2rem;
   color: white;
   background:
-    radial-gradient(circle at 100% 0%, rgb(134 188 36 / 28%), transparent 42%),
-    var(--navy-950);
+    radial-gradient(circle at 100% 0%, rgb(134 188 36 / 28%), transparent 42%), var(--navy-950);
   border-radius: 24px 7px 24px 7px;
   box-shadow: var(--shadow);
 }

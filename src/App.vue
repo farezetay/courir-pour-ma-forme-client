@@ -48,9 +48,7 @@ const logout = async () => {
       <RouterLink class="app-nav__link" to="/seasons">Saisons</RouterLink>
 
       <template v-if="authStore.isAuthenticated">
-        <button class="app-nav__button" type="button" @click="logout">
-          Se déconnecter
-        </button>
+        <button class="app-nav__button" type="button" @click="logout">Se déconnecter</button>
       </template>
 
       <template v-else>

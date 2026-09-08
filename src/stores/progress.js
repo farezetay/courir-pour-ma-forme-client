@@ -29,11 +29,7 @@ export const useProgressStore = defineStore('progress', {
         const data = await response.json()
 
         if (!response.ok) {
-          throw new Error(
-            data.statusMessage ||
-              data.message ||
-              `Erreur HTTP ${response.status}`,
-          )
+          throw new Error(data.statusMessage || data.message || `Erreur HTTP ${response.status}`)
         }
 
         this.activeSeason = data.activeSeason
@@ -60,28 +56,21 @@ export const useProgressStore = defineStore('progress', {
         // "resume" pour reprendre ou "restart" pour recommencer.
         const body = mode ? { mode } : {}
 
-        const response = await fetch(
-          `${urlAPI}/seasons/${seasonId}/start`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(body),
+        const response = await fetch(`${urlAPI}/seasons/${seasonId}/start`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
+          credentials: 'include',
+          body: JSON.stringify(body),
+        })
 
         const data = await response.json()
 
         if (!response.ok) {
           this.errorStatus = response.status
 
-          throw new Error(
-            data.statusMessage ||
-              data.message ||
-              `Erreur HTTP ${response.status}`,
-          )
+          throw new Error(data.statusMessage || data.message || `Erreur HTTP ${response.status}`)
         }
 
         // Recharge la progression complète après le démarrage.
@@ -102,22 +91,15 @@ export const useProgressStore = defineStore('progress', {
       this.errorStatus = null
 
       try {
-        const response = await fetch(
-          `${urlAPI}/seasons/${seasonId}/abandon`,
-          {
-            method: 'POST',
-            credentials: 'include',
-          },
-        )
+        const response = await fetch(`${urlAPI}/seasons/${seasonId}/abandon`, {
+          method: 'POST',
+          credentials: 'include',
+        })
 
         const data = await response.json()
 
         if (!response.ok) {
-          throw new Error(
-            data.statusMessage ||
-              data.message ||
-              `Erreur HTTP ${response.status}`,
-          )
+          throw new Error(data.statusMessage || data.message || `Erreur HTTP ${response.status}`)
         }
 
         this.activeSeason = null
@@ -139,33 +121,26 @@ export const useProgressStore = defineStore('progress', {
       this.error = null
 
       try {
-        const response = await fetch(
-          `${urlAPI}/sessions/${progress.sessionId}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-
-            body: JSON.stringify({
-              currentStepIndex: progress.currentStepIndex,
-              remainingSeconds: progress.remainingSeconds,
-              isCompleted: progress.isCompleted,
-              distanceMeters: progress.distanceMeters ?? null,
-              stepsCount: progress.stepsCount ?? null,
-            }),
+        const response = await fetch(`${urlAPI}/sessions/${progress.sessionId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
+          credentials: 'include',
+
+          body: JSON.stringify({
+            currentStepIndex: progress.currentStepIndex,
+            remainingSeconds: progress.remainingSeconds,
+            isCompleted: progress.isCompleted,
+            distanceMeters: progress.distanceMeters ?? null,
+            stepsCount: progress.stepsCount ?? null,
+          }),
+        })
 
         const data = await response.json()
 
         if (!response.ok) {
-          throw new Error(
-            data.statusMessage ||
-              data.message ||
-              `Erreur HTTP ${response.status}`,
-          )
+          throw new Error(data.statusMessage || data.message || `Erreur HTTP ${response.status}`)
         }
 
         return data

@@ -49,13 +49,7 @@ const submitRegister = async () => {
 
     <form class="auth-form" @submit.prevent="submitRegister">
       <label for="username">Pseudo</label>
-      <input
-        id="username"
-        v-model.trim="username"
-        type="text"
-        autocomplete="username"
-        required
-      />
+      <input id="username" v-model.trim="username" type="text" autocomplete="username" required />
 
       <label for="firstName">Prénom</label>
       <input
@@ -76,13 +70,7 @@ const submitRegister = async () => {
       />
 
       <label for="email">Email</label>
-      <input
-        id="email"
-        v-model.trim="email"
-        type="email"
-        autocomplete="email"
-        required
-      />
+      <input id="email" v-model.trim="email" type="email" autocomplete="email" required />
 
       <label for="password">Mot de passe</label>
       <input

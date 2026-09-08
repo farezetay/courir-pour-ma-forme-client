@@ -12,10 +12,7 @@ const password = ref('')
 const submitLogin = async () => {
   // Le store appelle l’API et renvoie l’utilisateur
   // lorsque la connexion réussit.
-  const user = await authStore.login(
-    identifier.value,
-    password.value,
-  )
+  const user = await authStore.login(identifier.value, password.value)
 
   // En cas d’erreur, login() renvoie null
   // et le message est disponible dans authStore.error.
@@ -25,12 +22,9 @@ const submitLogin = async () => {
 
   // Une fois connecté, le coureur arrive
   // sur la liste des saisons.
-  const redirect =
-  typeof route.query.redirect === 'string'
-    ? route.query.redirect
-    : '/seasons'
+  const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/seasons'
 
-router.push(redirect)
+  router.push(redirect)
 }
 </script>
 
@@ -58,11 +52,7 @@ router.push(redirect)
         required
       />
 
-      <p
-        v-if="authStore.error"
-        class="error"
-        role="alert"
-      >
+      <p v-if="authStore.error" class="error" role="alert">
         {{ authStore.error }}
       </p>
 
@@ -70,9 +60,7 @@ router.push(redirect)
         {{ authStore.loading ? 'Connexion...' : 'Se connecter' }}
       </button>
 
-      <RouterLink class="auth-switch" to="/register">
-        Créer un compte
-      </RouterLink>
+      <RouterLink class="auth-switch" to="/register"> Créer un compte </RouterLink>
     </form>
   </main>
 </template>

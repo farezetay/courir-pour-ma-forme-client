@@ -189,18 +189,18 @@ export const useSessionStore = defineStore('session', {
       }
     },
     restoreServerProgress(progress, completedSessionIds) {
-  // Copie les séances terminées récupérées depuis MySQL.
-  this.completedSessionIds = [...completedSessionIds]
+      // Copie les séances terminées récupérées depuis MySQL.
+      this.completedSessionIds = [...completedSessionIds]
 
-  // Cette séance n’a peut-être encore jamais été commencée.
-  if (!progress) {
-    return
-  }
+      // Cette séance n’a peut-être encore jamais été commencée.
+      if (!progress) {
+        return
+      }
 
-  this.currentStepIndex = progress.currentStepIndex
-  this.remainingSeconds = progress.remainingSeconds
-  this.isCompleted = progress.isCompleted
-  this.isRunning = false
-},
+      this.currentStepIndex = progress.currentStepIndex
+      this.remainingSeconds = progress.remainingSeconds
+      this.isCompleted = progress.isCompleted
+      this.isRunning = false
+    },
   },
 })

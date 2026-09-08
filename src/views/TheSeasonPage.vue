@@ -136,9 +136,7 @@ const abandonSeason = async () => {
             accéder aux suivantes.
           </p>
 
-          <RouterLink class="button-link button-link--green" to="/login">
-            Se connecter
-          </RouterLink>
+          <RouterLink class="button-link button-link--green" to="/login"> Se connecter </RouterLink>
         </template>
 
         <template v-else-if="isActiveSeason">
